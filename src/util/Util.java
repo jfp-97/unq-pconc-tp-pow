@@ -16,14 +16,24 @@ public class Util {
 		boolean cumple = true;
 
 		for (int i = 0; i < dificultad; i++) {
-			cumple &= hash[i] == 0;
+			cumple &= hash[i] == 00;
 		}
 
 		return cumple;
 	}
 
-	public static byte[] longAByteArray() {
-		return new byte[2];
+	// Precondición: (nro - 1) ^ (1/tamanio) < 256
+	// De no cumplirse la precondición, se genera overflow
+	public static byte[] longAByteArray(long nro, int tamanio) {
+		byte[] bytes = new byte[tamanio];
+		long nroActual = nro;
+
+		for (int i = 0; i < tamanio; i++) {
+			bytes[tamanio - i - 1] = (byte) (nroActual % 256 - 128);
+			nroActual = (long) Math.floor(nroActual / 256);
+		}
+
+		return bytes;
 	}
 
 	public static byte[] siguienteByteArray(byte[] bytes) {
@@ -38,10 +48,23 @@ public class Util {
 		return siguiente;
 	}
 
-	public static void main(String[] args) {
-		// byte[] bytes = { 0, 0, -128, -128, 0 };
-		byte[] bytes = "0".getBytes();
+	public static byte[] concatenarByteArrays(byte[] bs1, byte[] bs2) {
+		byte[] concat  = new byte[bs1.length + bs2.length];
 
-		System.out.println(4294967295l%256);
+		System.arraycopy(bs1, 0, concat, 0, bs1.length);
+        System.arraycopy(bs2, 0, concat, bs1.length, bs2.length);
+
+		return concat;
+	}
+
+	public static void main(String[] args) {
+		byte[] bytes = { 10, 0, 0, -128, -128, 0, 97 };
+		byte[] bytes2 = { 2, 3, 62, -22, 4 };
+
+		System.out.println(
+			Util.byteArrayAString(
+				Util.siguienteByteArray(Util.longAByteArray(4294967294l, 4))
+			)
+		);
 	}
 }

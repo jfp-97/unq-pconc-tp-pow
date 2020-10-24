@@ -1,5 +1,7 @@
 package unidadDeTrabajo;
 
+import powWorker.PowWorker;
+
 public class UnidadDeTrabajo {
 
 	private int id;
@@ -10,8 +12,8 @@ public class UnidadDeTrabajo {
 	public UnidadDeTrabajo(int id, int cantThreads, int tamanioNonce) {
 		this.id = id;
 		this.combinacionesPosibles = (long) Math.pow(256, tamanioNonce);
-		this.combinacionesPorUnidad = (long) Math.floor(this.combinacionesPosibles / cantThreads);
-		this.combinacionesRestantes = this.combinacionesPosibles % cantThreads;
+		this.combinacionesPorUnidad = (long) Math.floor(this.getCombinacionesPosibles() / cantThreads);
+		this.combinacionesRestantes = this.getCombinacionesPosibles() % cantThreads;
 	}
 
 	private int getId() {
@@ -38,20 +40,22 @@ public class UnidadDeTrabajo {
 		return this.desplazamiento(this.getId() + 1) + (this.getId() + 1) * this.getCombinacionesPorUnidad() - 1;
 	}
 
+	// El desplazamiento resuelve el problema de los
 	private long desplazamiento(int id) {
 		return Math.min(id, this.getCombinacionesRestantes());
 	}
 
 	public static void main(String[] args) {
-		int cantThreads = 10;
+		int cantThreads = 1;
 		int tamNonce = 4;
 		UnidadDeTrabajo[] us = new UnidadDeTrabajo[cantThreads];
 
 		for(int i = 0; i < cantThreads; i++) {
 			us[i] = new UnidadDeTrabajo(i, cantThreads, tamNonce);
-			System.out.println("U. d. t. " + i + ": [" + us[i].rangoMin() + ", " + us[i].rangoMax() + "]");
+			System.out.println("U.d.t. " + i + ": [" + us[i].rangoMin() + ", " + us[i].rangoMax() + "]");
 		}
 
-
+		PowWorker powworker = new PowWorker(us[0], tamNonce, "", 3);
+		powworker.start();
 	}
 }
