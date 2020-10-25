@@ -2,8 +2,8 @@ package main;
 
 import java.util.Scanner;
 
-import buffer.Buffer;
-import threads.PowWorker;
+import monitors.Buffer;
+import monitors.ThreadPool;
 import threads.WorkUnitProducer;
 import util.Config;
 
@@ -21,11 +21,10 @@ public class Main {
 		scanner.close();
 
 		Buffer buffer = new Buffer(2);
+		ThreadPool threadPool = new ThreadPool(buffer, config.getNonceSize(), config.getPrefix(), config.getDifficulty());
 		WorkUnitProducer workUnitProducer = new WorkUnitProducer(buffer, config.getThreadAmount(), config.getNonceSize());
 
-		PowWorker powWorker = new PowWorker(buffer, config.getNonceSize(), config.getPrefix(), config.getDifficulty());
-
 		workUnitProducer.start();
-		powWorker.start();
+		threadPool.initializeThreads(config.getThreadAmount());
 	}
 }

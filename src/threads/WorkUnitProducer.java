@@ -1,6 +1,6 @@
 package threads;
 
-import buffer.Buffer;
+import monitors.Buffer;
 import workUnit.WorkUnit;
 
 public class WorkUnitProducer extends Thread {
@@ -18,7 +18,6 @@ public class WorkUnitProducer extends Thread {
 	public void run() {
 		for (int i = 0; i < this.getThreadAmount(); i++) {
 			this.getBuffer().write(new WorkUnit(i, this.getThreadAmount(), this.getNonceSize()));
-			System.out.println("done");
 		}
 	}
 

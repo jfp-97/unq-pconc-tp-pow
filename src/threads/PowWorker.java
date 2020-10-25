@@ -1,6 +1,6 @@
 package threads;
 
-import buffer.Buffer;
+import monitors.Buffer;
 import util.ByteArrayUtil;
 import workUnit.WorkUnit;
 

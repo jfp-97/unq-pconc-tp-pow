@@ -1,4 +1,4 @@
-package buffer;
+package monitors;
 
 import workUnit.WorkUnit;
 
@@ -15,9 +15,7 @@ public class Buffer {
 		this.writePointer = 0;
 	}
 
-	private int getCapacity() {
-		return this.capacity;
-	}
+	private int getCapacity() { return this.capacity; }
 
 	private int getReadPointer() {
 		return this.readPointer;
