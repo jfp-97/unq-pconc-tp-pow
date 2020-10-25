@@ -10,7 +10,7 @@ public class Config {
 	private byte[] prefix;
 
 	public int getThreadAmount() {
-		return threadAmount;
+		return this.threadAmount;
 	}
 
 	public void setThreadAmount(int threadAmount) {
@@ -18,7 +18,7 @@ public class Config {
 	}
 
 	public int getDifficulty() {
-		return difficulty;
+		return this.difficulty;
 	}
 
 	public void setDifficulty(int difficulty) {
@@ -26,7 +26,7 @@ public class Config {
 	}
 
 	public byte[] getPrefix() {
-		return prefix;
+		return this.prefix;
 	}
 
 	public void setPrefix(byte[] prefix) {
@@ -34,7 +34,7 @@ public class Config {
 	}
 
 	public int getNonceSize() {
-		return nonceSize;
+		return this.nonceSize;
 	}
 
 	public void setNonceSize(int nonceSize) {
@@ -51,7 +51,7 @@ public class Config {
 
 	public void inputThreadAmount(Scanner scanner) {
 
-		System.out.println("Ingrese la cantidad de threads a utilizar (entre 1 y 16 inclusive)");
+		System.out.println("Ingrese la cantidad de threads a utilizar (entre 1 y " + this.getMaxThreads() + " inclusive)");
 		int input = Integer.parseInt(scanner.nextLine());
 
 		while (input < 1
