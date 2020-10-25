@@ -1,5 +1,7 @@
 package util;
 
+import java.util.Scanner;
+
 public class Config {
 	private int nonceSize;
 	private int threadAmount;
@@ -45,5 +47,41 @@ public class Config {
 
 	public int getMaxThreads() {
 		return this.maxThreads;
+	}
+
+	public void inputThreadAmount() {
+		Scanner scanner = new Scanner(System.in);
+
+		System.out.println("Ingrese la cantidad de threads a utilizar (entre 1 y 16 inclusive)");
+		int input = Integer.parseInt(scanner.nextLine());
+
+		while (input < 1
+				|| input > this.getMaxThreads()) {
+
+			System.out.println("La cantidad de threads ingresada es inválida");
+			System.out.println("Ingrese la cantidad de threads a utilizar (entre 1 y 16 inclusive)");
+			input = Integer.parseInt(scanner.nextLine());
+		}
+		this.setThreadAmount(input);
+
+		scanner.close();
+	}
+
+	public void inputDifficulty() {
+		Scanner scanner = new Scanner(System.in);
+
+		System.out.println("Ingrese la dificultad objetivo");
+		this.setDifficulty(Integer.parseInt(scanner.nextLine()));
+
+		scanner.close();
+	}
+
+	public void inputPrefix() {
+		Scanner scanner = new Scanner(System.in);
+
+		System.out.println("Ingrese el prefijo");
+		this.setPrefix(scanner.nextLine().getBytes());
+
+		scanner.close();
 	}
 }
