@@ -1,20 +1,21 @@
 package buffer;
 
-import unidadDeTrabajo.UnidadDeTrabajo;
+import workUnit.WorkUnit;
 
 public class Buffer {
-	private int capacidad;
+	private int capacity;
 	private int readPointer;
-	private int tamanioNonce;
-	private UnidadDeTrabajo[] unidadesDeTrabajo;
+	private int nonceSize;
+	private WorkUnit[] workUnits = new WorkUnit[1];
 
-	public Buffer(int capacidad) {
-		this.capacidad = capacidad;
+	public Buffer(int capacity, WorkUnit workUnit) {
+		this.capacity = capacity;
 		this.readPointer = 0;
+		this.workUnits[0] = workUnit;
 	}
 
-	public synchronized UnidadDeTrabajo leer() {
+	public synchronized WorkUnit read() {
 
-		return unidadesDeTrabajo[this.readPointer];
+		return workUnits[this.readPointer];
 	}
 }
