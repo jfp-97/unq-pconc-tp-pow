@@ -49,8 +49,7 @@ public class Config {
 		return this.maxThreads;
 	}
 
-	public void inputThreadAmount() {
-		Scanner scanner = new Scanner(System.in);
+	public void inputThreadAmount(Scanner scanner) {
 
 		System.out.println("Ingrese la cantidad de threads a utilizar (entre 1 y 16 inclusive)");
 		int input = Integer.parseInt(scanner.nextLine());
@@ -63,25 +62,15 @@ public class Config {
 			input = Integer.parseInt(scanner.nextLine());
 		}
 		this.setThreadAmount(input);
-
-		scanner.close();
 	}
 
-	public void inputDifficulty() {
-		Scanner scanner = new Scanner(System.in);
-
+	public void inputDifficulty(Scanner scanner) {
 		System.out.println("Ingrese la dificultad objetivo");
 		this.setDifficulty(Integer.parseInt(scanner.nextLine()));
-
-		scanner.close();
 	}
 
-	public void inputPrefix() {
-		Scanner scanner = new Scanner(System.in);
-
+	public void inputPrefix(Scanner scanner) {
 		System.out.println("Ingrese el prefijo");
 		this.setPrefix(scanner.nextLine().getBytes());
-
-		scanner.close();
 	}
 }
