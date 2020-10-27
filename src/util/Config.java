@@ -51,26 +51,26 @@ public class Config {
 
 	public void inputThreadAmount(Scanner scanner) {
 
-		System.out.println("Ingrese la cantidad de threads a utilizar (entre 1 y " + this.getMaxThreads() + " inclusive)");
+		System.out.println("Enter amount of threads (between 1 and " + this.getMaxThreads() + ")");
 		int input = Integer.parseInt(scanner.nextLine());
 
 		while (input < 1
 				|| input > this.getMaxThreads()) {
 
-			System.out.println("La cantidad de threads ingresada es inválida");
-			System.out.println("Ingrese la cantidad de threads a utilizar (entre 1 y 16 inclusive)");
+			System.out.println("The specified amount of threads is invalid");
+			System.out.println("Enter amount of threads (between 1 and " + this.getMaxThreads() + ")");
 			input = Integer.parseInt(scanner.nextLine());
 		}
 		this.setThreadAmount(input);
 	}
 
 	public void inputDifficulty(Scanner scanner) {
-		System.out.println("Ingrese la dificultad objetivo");
+		System.out.println("Enter difficulty");
 		this.setDifficulty(Integer.parseInt(scanner.nextLine()));
 	}
 
 	public void inputPrefix(Scanner scanner) {
-		System.out.println("Ingrese el prefijo");
+		System.out.println("Enter prefix");
 		this.setPrefix(scanner.nextLine().getBytes());
 	}
 }

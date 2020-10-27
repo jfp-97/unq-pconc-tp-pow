@@ -19,13 +19,13 @@ public class ByteArrayUtil {
 		boolean complies = true;
 
 		for (int i = 0; i < difficulty; i++) {
-			complies &= bs[i] == 00;
+			complies &= bs[i] == 0;
 		}
 
 		return complies;
 	}
 
-	// Precondición: (nro - 1) ^ (1/tamanio) < 256
+	// Precondición: (n - 1) ^ (1/size) < 256
 	// De no cumplirse la precondición, se genera overflow
 	public static byte[] longAsByteArray(long n, int size) {
 		byte[] bs = new byte[size];
