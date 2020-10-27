@@ -22,34 +22,79 @@ public class ThreadPool {
 		this.hasNonce = false;
 	}
 
+	private long getStartTime() {
+		return this.startTime;
+	}
+
 	private void setStartTime(long startTime) {
 		this.startTime = startTime;
+	}
+
+	private long getFinishTime() {
+		return this.finishTime;
 	}
 
 	private void setFinishTime(long finishTime) {
 		this.finishTime = finishTime;
 	}
 
+	private byte[] getNonceResult() {
+		return this.nonceResult;
+	}
+
 	private void setNonceResult(byte[] nonceResult) {
 		this.nonceResult = nonceResult;
 	}
 
+	private PowWorker[] getPowWorkers() {
+		return this.powWorkers;
+	}
+
+	private void setPowWorkers(PowWorker[] powWorkers) {
+		this.powWorkers = powWorkers;
+	}
+
+	private Buffer getBuffer() {
+		return this.buffer;
+	}
+
+	private int getNonceSize() {
+		return this.nonceSize;
+	}
+
+	private byte[] getPrefix() {
+		return this.prefix;
+	}
+
+	private int getDifficulty() {
+		return this.difficulty;
+	}
+
+	private boolean getHasNonce() {
+		return this.hasNonce;
+	}
+
+	private void setHasNonce(boolean hasNonce) {
+		this.hasNonce = hasNonce;
+	}
+
 	public void searchNonce(int threadAmount) {
 		this.setStartTime(System.currentTimeMillis());
-		this.powWorkers = new PowWorker[threadAmount];
+		this.setPowWorkers(new PowWorker[threadAmount]);
+
 		for (int i = 0; i < threadAmount; i++) {
-			this.powWorkers[i] = new PowWorker(
-					this.buffer, this.nonceSize, this.prefix, this.difficulty, this);
-			this.powWorkers[i].start();
+			this.getPowWorkers()[i] = new PowWorker(
+					this.getBuffer(), this.getNonceSize(), this.getPrefix(), this.getDifficulty(), this);
+			this.getPowWorkers()[i].start();
 		}
 	}
 
 	public synchronized void writeNonce(byte[] nonceResult) {
-		if (this.hasNonce) return;
+		if (this.getHasNonce()) return;
 
-		this.hasNonce = true;
+		this.setHasNonce(true);
 
-		for (PowWorker powWorker : this.powWorkers) {
+		for (PowWorker powWorker : this.getPowWorkers()) {
 			powWorker.stopWorking();
 		}
 
@@ -59,7 +104,7 @@ public class ThreadPool {
 	}
 
 	public synchronized byte[] readNonce() {
-		while (!(this.hasNonce)) {
+		while (!(this.getHasNonce())) {
 			try {
 				wait();
 			} catch (InterruptedException e) {
@@ -67,10 +112,10 @@ public class ThreadPool {
 			}
 		}
 		notifyAll();
-		return this.nonceResult;
+		return this.getNonceResult();
 	}
 
 	public long timeElapsed() {
-		return this.finishTime - this.startTime;
+		return this.getFinishTime() - this.getStartTime();
 	}
 }
