@@ -3,7 +3,6 @@ package main;
 import java.util.Scanner;
 
 import monitors.Buffer;
-import monitors.NonceResult;
 import monitors.ThreadPool;
 import threads.WorkUnitProducer;
 import util.ByteArrayUtil;
@@ -13,7 +12,7 @@ public class Main {
 
 	public static void main(String[] args) {
 		Config config = new Config();
-		config.setNonceSize(4);
+		config.setNonceSize(5);
 		config.setMaxThreads(16);
 
 		Scanner scanner = new Scanner(System.in);
@@ -23,20 +22,18 @@ public class Main {
 		scanner.close();
 
 		Buffer buffer = new Buffer(2);
-		NonceResult nonceResult = new NonceResult();
 		ThreadPool threadPool = new ThreadPool(
-				buffer, config.getNonceSize(), config.getPrefix(), config.getDifficulty(), nonceResult);
+				buffer, config.getNonceSize(), config.getPrefix(), config.getDifficulty());
 		WorkUnitProducer workUnitProducer = new WorkUnitProducer(
 				buffer, config.getThreadAmount(), config.getNonceSize());
 
-		long startTime = System.currentTimeMillis();
 		workUnitProducer.start();
-		threadPool.initializeThreads(config.getThreadAmount());
+		threadPool.searchNonce(config.getThreadAmount());
 
-		byte[] result = nonceResult.read();
-		System.out.println("Time: " + (nonceResult.writeTime() - startTime) + " ms");
+		byte[] result = threadPool.readNonce();
 		System.out.println("Nonce: " + ByteArrayUtil.byteArrayAsString(result));
 		System.out.println("Hashed nonce: " + ByteArrayUtil.byteArrayAsString(
 				ByteArrayUtil.hash(result)));
+		System.out.println("Time: " + (threadPool.timeElapsed()) + " ms");
 	}
 }

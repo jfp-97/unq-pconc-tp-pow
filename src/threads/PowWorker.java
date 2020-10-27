@@ -1,7 +1,7 @@
 package threads;
 
 import monitors.Buffer;
-import monitors.NonceResult;
+import monitors.ThreadPool;
 import util.ByteArrayUtil;
 import workUnit.WorkUnit;
 
@@ -10,18 +10,25 @@ public class PowWorker extends Thread {
 	private int nonceSize;
 	private byte[] prefix;
 	private int difficulty;
-	private NonceResult nonceResult;
+	private ThreadPool threadPool;
+	private boolean hasToWork;
 
-	public PowWorker(Buffer buffer, int nonceSize, byte[] prefix, int difficulty, NonceResult nonceResult) {
+	public PowWorker(
+			Buffer buffer, int nonceSize, byte[] prefix, int difficulty, ThreadPool threadPool) {
 		this.buffer = buffer;
 		this.nonceSize = nonceSize;
 		this.prefix = prefix;
 		this.difficulty = difficulty;
-		this.nonceResult = nonceResult;
+		this.threadPool = threadPool;
+		this.hasToWork = true;
 	}
 
 	private byte[] prefixConc(byte[] nonce) {
 		return ByteArrayUtil.byteArrayConc(this.prefix, nonce);
+	}
+
+	public void stopWorking() {
+		this.hasToWork = false;
 	}
 
 	@Override
@@ -34,7 +41,7 @@ public class PowWorker extends Thread {
 
 		while (!(ByteArrayUtil.compliesDifficulty(currentHash, this.difficulty))
 				&& currentNum < workUnit.maxRange()
-				&& this.nonceResult.isEmpty()) {
+				&& this.hasToWork) {
 
 			currentNum++;
 			currentNonce = ByteArrayUtil.nextByteArray(currentNonce);
@@ -42,7 +49,7 @@ public class PowWorker extends Thread {
 		}
 
 		if (ByteArrayUtil.compliesDifficulty(currentHash, this.difficulty)) {
-			this.nonceResult.write(currentNonce);
+			this.threadPool.writeNonce(currentNonce);
 		} else {
 		}
 	}
