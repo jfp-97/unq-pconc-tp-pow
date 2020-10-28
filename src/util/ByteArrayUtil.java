@@ -17,9 +17,11 @@ public class ByteArrayUtil {
 
 	public static boolean compliesDifficulty(byte[] bs, int difficulty) {
 		boolean complies = true;
+		int i = 0;
 
-		for (int i = 0; i < difficulty; i++) {
+		while (complies && i < difficulty) {
 			complies &= bs[i] == 0;
+			i++;
 		}
 
 		return complies;
