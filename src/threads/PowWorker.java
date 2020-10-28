@@ -2,6 +2,7 @@ package threads;
 
 import monitors.Buffer;
 import monitors.ThreadPool;
+import searchResult.FoundNonce;
 import util.ByteArrayUtil;
 import workUnit.WorkUnit;
 
@@ -49,8 +50,10 @@ public class PowWorker extends Thread {
 		}
 
 		if (ByteArrayUtil.compliesDifficulty(currentHash, this.difficulty)) {
-			this.threadPool.writeNonce(currentNonce);
-		} else {
+			this.threadPool.write(
+					new FoundNonce(currentNonce));
+		} else if (currentNum == workUnit.maxRange()) {
+			this.threadPool.incFailedThreads();
 		}
 	}
 }

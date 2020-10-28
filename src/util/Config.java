@@ -65,8 +65,18 @@ public class Config {
 	}
 
 	public void inputDifficulty(Scanner scanner) {
-		System.out.println("Enter difficulty");
-		this.setDifficulty(Integer.parseInt(scanner.nextLine()));
+		System.out.println("Enter difficulty (between 0 and 32)");
+		int input = Integer.parseInt(scanner.nextLine());
+
+		while (input < 0
+				|| input > 32) {
+
+			System.out.println("The specified difficulty is invalid");
+			System.out.println("Enter difficulty (between 0 and 32)");
+			input = Integer.parseInt(scanner.nextLine());
+		}
+
+		this.setDifficulty(input);
 	}
 
 	public void inputPrefix(Scanner scanner) {
