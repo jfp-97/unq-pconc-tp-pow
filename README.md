@@ -50,11 +50,24 @@ Las pruebas fueron corridas en el equipo especificado en el punto anterior. Cada
 
 | Cantidad de threads | Tiempo transcurrido |
 | --- | --- |
-| 1 | asd ms |
-| 2 | asd ms |
-| 4 | asd ms |
-| 6 | asd ms |
-| 8 | asd ms |
-| 10 | asd ms |
+| 1 | 407 ms |
+| 2 | 538 ms |
+| 4 | 550 ms |
+| 6 | 796 ms |
+| 8 | 538 ms |
+| 10 | 617 ms |
+
+##### 3.2.b. Con dificultad 3
+
+| Cantidad de threads | Tiempo transcurrido |
+| --- | --- |
+| 1 | 20540 ms |
+| 2 | 11015 ms |
+| 4 | 1304 ms |
+| 6 | 8181 ms |
+| 8 | 2464 ms |
+| 10 | 15963 ms |
 
 ### Análisis
+
+Golden nonce (no existe) -> 1728705 ms = ~29 min
