@@ -24,36 +24,62 @@ public class PowWorker extends Thread {
 		this.hasToWork = true;
 	}
 
+	private Buffer getBuffer() {
+		return this.buffer;
+	}
+
+	private int getNonceSize() {
+		return this.nonceSize;
+	}
+
+	private byte[] getPrefix() {
+		return this.prefix;
+	}
+
+	private int getDifficulty() {
+		return this.difficulty;
+	}
+
+	private ThreadPool getThreadPool() {
+		return this.threadPool;
+	}
+
+	private boolean getHasToWork() {
+		return this.hasToWork;
+	}
+
+	private void setHasToWork(boolean hasToWork) {
+		this.hasToWork = hasToWork;
+	}
+
 	private byte[] prefixConc(byte[] nonce) {
-		return ByteArrayUtil.byteArrayConc(this.prefix, nonce);
+		return ByteArrayUtil.byteArrayConc(this.getPrefix(), nonce);
 	}
 
 	public void stopWorking() {
-		this.hasToWork = false;
+		this.setHasToWork(false);
 	}
 
 	@Override
 	public void run() {
-		WorkUnit workUnit = this.buffer.read();
+		WorkUnit workUnit = this.getBuffer().read();
 
 		long currentNum = workUnit.minRange();
-		byte[] currentNonce = ByteArrayUtil.longAsByteArray(currentNum, nonceSize);
+		byte[] currentNonce = ByteArrayUtil.longAsByteArray(currentNum, this.getNonceSize());
 		byte[] currentHash = ByteArrayUtil.hash(this.prefixConc(currentNonce));
 
-		while (!(ByteArrayUtil.compliesDifficulty(currentHash, this.difficulty))
+		while (!(ByteArrayUtil.compliesDifficulty(currentHash, this.getDifficulty()))
 				&& currentNum < workUnit.maxRange()
-				&& this.hasToWork) {
+				&& this.getHasToWork()) {
 
 			currentNum++;
 			currentNonce = ByteArrayUtil.nextByteArray(currentNonce);
 			currentHash = ByteArrayUtil.hash(this.prefixConc(currentNonce));
 		}
 
-		if (ByteArrayUtil.compliesDifficulty(currentHash, this.difficulty)) {
-			this.threadPool.write(
-					new FoundNonce(currentNonce));
-		} else if (currentNum == workUnit.maxRange()) {
-			this.threadPool.incFailedThreads();
-		}
+		if (ByteArrayUtil.compliesDifficulty(currentHash, this.getDifficulty()))
+			this.getThreadPool().write(new FoundNonce(currentNonce));
+		else if (currentNum == workUnit.maxRange())
+			this.getThreadPool().incFailedThreads();
 	}
 }

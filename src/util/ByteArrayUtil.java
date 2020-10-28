@@ -25,8 +25,6 @@ public class ByteArrayUtil {
 		return complies;
 	}
 
-	// Precondición: (n - 1) ^ (1/size) < 256
-	// De no cumplirse la precondición, se genera overflow
 	public static byte[] longAsByteArray(long n, int size) {
 		byte[] bs = new byte[size];
 		long current = n;

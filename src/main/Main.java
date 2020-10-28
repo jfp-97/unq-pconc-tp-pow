@@ -13,7 +13,7 @@ public class Main {
 
 	public static void main(String[] args) {
 		Config config = new Config();
-		config.setNonceSize(1);
+		config.setNonceSize(4);
 		config.setMaxThreads(16);
 
 		Scanner scanner = new Scanner(System.in);

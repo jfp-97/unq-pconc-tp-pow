@@ -50,31 +50,31 @@ public class Config {
 	}
 
 	public void inputThreadAmount(Scanner scanner) {
+		int input;
 
-		System.out.println("Enter amount of threads (between 1 and " + this.getMaxThreads() + ")");
-		int input = Integer.parseInt(scanner.nextLine());
-
-		while (input < 1
-				|| input > this.getMaxThreads()) {
-
-			System.out.println("The specified amount of threads is invalid");
+		do {
 			System.out.println("Enter amount of threads (between 1 and " + this.getMaxThreads() + ")");
 			input = Integer.parseInt(scanner.nextLine());
-		}
+
+			if (input < 1|| input > this.getMaxThreads())
+					System.out.println("The specified amount of threads is invalid");
+
+		} while (input < 1 || input > this.getMaxThreads());
+
 		this.setThreadAmount(input);
 	}
 
 	public void inputDifficulty(Scanner scanner) {
-		System.out.println("Enter difficulty (between 0 and 32)");
-		int input = Integer.parseInt(scanner.nextLine());
+		int input;
 
-		while (input < 0
-				|| input > 32) {
-
-			System.out.println("The specified difficulty is invalid");
+		do {
 			System.out.println("Enter difficulty (between 0 and 32)");
 			input = Integer.parseInt(scanner.nextLine());
-		}
+
+			if (input < 0 || input > 32)
+				System.out.println("The specified difficulty is invalid");
+
+		} while (input < 0 || input > 32);
 
 		this.setDifficulty(input);
 	}
