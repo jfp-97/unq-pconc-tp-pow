@@ -95,7 +95,13 @@ public class ThreadPool {
 	}
 
 	public synchronized void write(SearchResult searchResult) {
-		if (this.getHasResult()) return;
+		while (this.getHasResult()) {
+			try {
+				wait();
+			} catch (InterruptedException e) {
+				e.printStackTrace();
+			}
+		}
 
 		for (PowWorker powWorker : this.getPowWorkers()) {
 			powWorker.stopWorking();
@@ -115,6 +121,7 @@ public class ThreadPool {
 			}
 		}
 		notifyAll();
+		this.setHasResult(false);
 		return this.getSearchResult();
 	}
 }

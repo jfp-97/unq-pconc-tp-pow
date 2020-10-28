@@ -31,11 +31,13 @@ public class WorkUnit {
 	}
 
 	public long minRange() {
-		return this.shift(this.getId()) + this.getId() * this.getPerUnitCombinations();
+		return this.shift(this.getId())
+				+ this.getId() * this.getPerUnitCombinations();
 	}
 
 	public long maxRange() {
-		return this.shift(this.getId() + 1) + (this.getId() + 1) * this.getPerUnitCombinations() - 1;
+		return this.shift(this.getId() + 1)
+				+ (this.getId() + 1) * this.getPerUnitCombinations() - 1;
 	}
 
 	// El desplazamiento (shift) reparte las combinaciones que sobran entre los WorkUnit con ids mas bajos,
