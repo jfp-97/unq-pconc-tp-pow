@@ -2,7 +2,7 @@
 
 ## Trabajo práctico: Proof of Work
 
-### Autor
+### 1. Autor
 
 * Nombre: Perez, Juan Francisco
 
@@ -10,9 +10,9 @@
 
 * Nro. de legajo: 50775
 
-### Introducción
+### 2. Introducción
 
-#### Dominio
+#### 2.1. Dominio
 
 El programa presentado busca encontrar una secuencia de cuatro bytes (llamada *nonce*) tal que su concatenación con otra secuencia de bytes ingresada por el usuario produzca un hash que comience con una cantidad de ceros acorde con la especificada como dificultad, también ingresada por el usuario.
 
@@ -20,7 +20,7 @@ Se permite también configurar la cantidad de thread que van a trabajar en paral
 
 En caso de que terminaran todos los thread de barrer su rango de combinaciones posibles sin que ninguno haya hallado un nonce que satisfaga la dificultad pedida, se le informará al usuario.
 
-#### Diseño
+#### 2.2. Diseño
 
 El programa consta de un monitor `ThreadPool` al cual se le pide comenzar la búsqueda, e inmediatamente después se trata de leer de él el resultado obtenido. Esto bloqueará al thread principal del programa hasta que en `ThreadPool` haya sido escrita una respuesta.
 
@@ -30,6 +30,31 @@ Un `PowWorker` trabajará bien hasta encontrar un nonce que satisfaga lo requeri
 
 Si, en cambio, todos los `PowWorker` terminaran sin resultado (habiendo cada uno notificado al `ThreadPool` de esto), el `ThreadPool` dará como respuesta que el nonce pedido no existe.
 
-### Evaluación
+### 3. Evaluación
+
+#### 3.1. Especificación el equipo de prueba
+
+* Procesador: AMD A9, 3.0 GHz, 2 cores
+
+* RAM: 8 GB
+
+* Sistema operativo: Linux Mint 20
+
+#### 3.2. Datos
+
+Los datos presentados muestran el tiempo de ejecución tanscurrido para hallar un nonce con la dificultades 2 y 3, usando 1, 2, 4, 6, 8 y 10 threads. 
+
+Las pruebas fueron corridas en el equipo especificado en el punto anterior. Cada combinación de dificultad/cantidad de threads fue corrida cinco veces, y se presenta el promedio de tiempo en todos los casos.
+
+##### 3.2.a. Con dificultad 2
+
+| Cantidad de threads | Tiempo transcurrido |
+| --- | --- |
+| 1 | asd ms |
+| 2 | asd ms |
+| 4 | asd ms |
+| 6 | asd ms |
+| 8 | asd ms |
+| 10 | asd ms |
 
 ### Análisis
