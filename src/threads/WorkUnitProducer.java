@@ -1,6 +1,7 @@
 package threads;
 
 import monitors.Buffer;
+import util.Config;
 import workUnit.WorkUnit;
 
 public class WorkUnitProducer extends Thread {
@@ -8,17 +9,10 @@ public class WorkUnitProducer extends Thread {
 	private int threadAmount;
 	private int nonceSize;
 
-	public WorkUnitProducer(Buffer buffer, int threadAmount, int nonceSize) {
+	public WorkUnitProducer(Buffer buffer, Config config) {
 		this.buffer = buffer;
-		this.threadAmount = threadAmount;
-		this.nonceSize = nonceSize;
-	}
-
-	@Override
-	public void run() {
-		for (int i = 0; i < this.getThreadAmount(); i++) {
-			this.getBuffer().write(new WorkUnit(i, this.getThreadAmount(), this.getNonceSize()));
-		}
+		this.threadAmount = config.getThreadAmount();
+		this.nonceSize = config.getNonceSize();
 	}
 
 	private Buffer getBuffer() {
@@ -31,5 +25,12 @@ public class WorkUnitProducer extends Thread {
 
 	public int getNonceSize() {
 		return this.nonceSize;
+	}
+
+	@Override
+	public void run() {
+		for (int i = 0; i < this.getThreadAmount(); i++) {
+			this.getBuffer().write(new WorkUnit(i, this.getThreadAmount(), this.getNonceSize()));
+		}
 	}
 }

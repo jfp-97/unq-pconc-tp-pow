@@ -1,127 +1,32 @@
 package monitors;
 
 
-import searchResult.FailedSearch;
-import searchResult.SearchResult;
 import threads.PowWorker;
+import util.Config;
 
 public class ThreadPool {
-	private Buffer buffer;
-	private int threadAmount;
-	private int nonceSize;
-	private byte[] prefix;
-	private int difficulty;
-	private PowWorker[] powWorkers;
-	private boolean hasResult;
-	private SearchResult searchResult;
-	private int failedThreads;
+	private PowWorker[] workers;
 
-	public ThreadPool(Buffer buffer, int threadAmount, int nonceSize, byte[] prefix, int difficulty) {
-		this.buffer = buffer;
-		this.threadAmount = threadAmount;
-		this.nonceSize = nonceSize;
-		this.prefix = prefix;
-		this.difficulty = difficulty;
-		this.hasResult = false;
+	private PowWorker[] getWorkers() {
+		return this.workers;
 	}
 
-	private int getThreadAmount() {
-		return this.threadAmount;
+	private void setWorkers(PowWorker[] workers) {
+		this.workers = workers;
 	}
 
-	private SearchResult getSearchResult() {
-		return this.searchResult;
-	}
+	public void startSearching(Buffer buffer, ResultBuffer resultBuffer, Config config) {
+		this.setWorkers(new PowWorker[config.getThreadAmount()]);
 
-	private void setSearchResult(SearchResult searchResult) {
-		this.searchResult = searchResult;
-	}
-
-	private PowWorker[] getPowWorkers() {
-		return this.powWorkers;
-	}
-
-	private void setPowWorkers(PowWorker[] powWorkers) {
-		this.powWorkers = powWorkers;
-	}
-
-	private Buffer getBuffer() {
-		return this.buffer;
-	}
-
-	private int getNonceSize() {
-		return this.nonceSize;
-	}
-
-	private byte[] getPrefix() {
-		return this.prefix;
-	}
-
-	private int getDifficulty() {
-		return this.difficulty;
-	}
-
-	private boolean getHasResult() {
-		return this.hasResult;
-	}
-
-	private void setHasResult(boolean hasResult) {
-		this.hasResult = hasResult;
-	}
-
-	private int getFailedThreads() {
-		return this.failedThreads;
-	}
-
-	private void setFailedThreads(int failedThreads) {
-		this.failedThreads = failedThreads;
-	}
-
-	public void searchNonce() {
-		this.setPowWorkers(new PowWorker[this.getThreadAmount()]);
-
-		for (int i = 0; i < this.getThreadAmount(); i++) {
-			this.getPowWorkers()[i] = new PowWorker(
-					this.getBuffer(), this.getNonceSize(), this.getPrefix(), this.getDifficulty(), this);
-			this.getPowWorkers()[i].start();
+		for (int i = 0; i < config.getThreadAmount(); i++) {
+			this.getWorkers()[i] = new PowWorker(buffer, resultBuffer, config);
+			this.getWorkers()[i].start();
 		}
 	}
 
-	public synchronized void incFailedThreads() {
-		this.setFailedThreads(this.getFailedThreads() + 1);
-
-		if (this.getFailedThreads() == this.getThreadAmount())
-			this.write(new FailedSearch());
-	}
-
-	public synchronized void write(SearchResult searchResult) {
-		while (this.getHasResult()) {
-			try {
-				wait();
-			} catch (InterruptedException e) {
-				e.printStackTrace();
-			}
+	public void stopSearching() {
+		for (PowWorker worker : this.getWorkers()) {
+			worker.stopWorking();
 		}
-
-		for (PowWorker powWorker : this.getPowWorkers()) {
-			powWorker.stopWorking();
-		}
-
-		this.setSearchResult(searchResult);
-		this.setHasResult(true);
-		notifyAll();
-	}
-
-	public synchronized SearchResult read() {
-		while (!(this.getHasResult())) {
-			try {
-				wait();
-			} catch (InterruptedException e) {
-				e.printStackTrace();
-			}
-		}
-		notifyAll();
-		this.setHasResult(false);
-		return this.getSearchResult();
 	}
 }

@@ -6,7 +6,6 @@ public class Config {
 	private int nonceSize;
 	private int threadAmount;
 	private int difficulty;
-	private int maxThreads;
 	private byte[] prefix;
 
 	public int getThreadAmount() {
@@ -41,25 +40,17 @@ public class Config {
 		this.nonceSize = nonceSize;
 	}
 
-	public void setMaxThreads(int maxThreads) {
-		this.maxThreads = maxThreads;
-	}
-
-	public int getMaxThreads() {
-		return this.maxThreads;
-	}
-
 	public void inputThreadAmount(Scanner scanner) {
 		int input;
 
 		do {
-			System.out.println("Enter amount of threads (between 1 and " + this.getMaxThreads() + ")");
+			System.out.println("Enter amount of threads between 1 and 16 (recommended)");
 			input = Integer.parseInt(scanner.nextLine());
 
-			if (input < 1|| input > this.getMaxThreads())
+			if (input < 1)
 					System.out.println("The specified amount of threads is invalid");
 
-		} while (input < 1 || input > this.getMaxThreads());
+		} while (input < 1);
 
 		this.setThreadAmount(input);
 	}
@@ -68,7 +59,7 @@ public class Config {
 		int input;
 
 		do {
-			System.out.println("Enter difficulty (between 0 and 32)");
+			System.out.println("Enter difficulty between 0 and 32");
 			input = Integer.parseInt(scanner.nextLine());
 
 			if (input < 0 || input > 32)

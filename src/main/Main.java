@@ -3,6 +3,7 @@ package main;
 import java.util.Scanner;
 
 import monitors.Buffer;
+import monitors.ResultBuffer;
 import monitors.ThreadPool;
 import searchResult.SearchResult;
 import threads.WorkUnitProducer;
@@ -14,7 +15,6 @@ public class Main {
 	public static void main(String[] args) {
 		Config config = new Config();
 		config.setNonceSize(4);
-		config.setMaxThreads(16);
 
 		Scanner scanner = new Scanner(System.in);
 		config.inputThreadAmount(scanner);
@@ -23,17 +23,19 @@ public class Main {
 		scanner.close();
 
 		Buffer buffer = new Buffer(2);
-		ThreadPool threadPool = new ThreadPool(
-				buffer, config.getThreadAmount(), config.getNonceSize(), config.getPrefix(), config.getDifficulty());
-		WorkUnitProducer workUnitProducer = new WorkUnitProducer(
-				buffer, config.getThreadAmount(), config.getNonceSize());
+		ResultBuffer resultBuffer = new ResultBuffer(config.getThreadAmount());
+
 		Timer timer = new Timer();
+
+		WorkUnitProducer workUnitProducer = new WorkUnitProducer(buffer, config);
+		ThreadPool threadPool = new ThreadPool();
 
 		timer.startRunning();
 		workUnitProducer.start();
-		threadPool.searchNonce();
+		threadPool.startSearching(buffer, resultBuffer, config);
 
-		SearchResult searchResult = threadPool.read();
+		SearchResult searchResult = resultBuffer.read();
+		threadPool.stopSearching();
 		timer.stopRunning();
 
 		searchResult.printResult();

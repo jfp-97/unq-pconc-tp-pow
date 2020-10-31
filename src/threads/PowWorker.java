@@ -1,31 +1,35 @@
 package threads;
 
 import monitors.Buffer;
-import monitors.ThreadPool;
+import monitors.ResultBuffer;
 import searchResult.FoundNonce;
 import util.ByteArrayUtil;
+import util.Config;
 import workUnit.WorkUnit;
 
 public class PowWorker extends Thread {
 	private Buffer buffer;
+	private ResultBuffer resultBuffer;
 	private int nonceSize;
 	private byte[] prefix;
 	private int difficulty;
-	private ThreadPool threadPool;
 	private boolean hasToWork;
 
-	public PowWorker(
-			Buffer buffer, int nonceSize, byte[] prefix, int difficulty, ThreadPool threadPool) {
+	public PowWorker(Buffer buffer, ResultBuffer resultBuffer, Config config) {
 		this.buffer = buffer;
-		this.nonceSize = nonceSize;
-		this.prefix = prefix;
-		this.difficulty = difficulty;
-		this.threadPool = threadPool;
+		this.resultBuffer = resultBuffer;
+		this.nonceSize = config.getNonceSize();
+		this.prefix = config.getPrefix();
+		this.difficulty = config.getDifficulty();
 		this.hasToWork = true;
 	}
 
 	private Buffer getBuffer() {
 		return this.buffer;
+	}
+
+	private ResultBuffer getResultBuffer() {
+		return this.resultBuffer;
 	}
 
 	private int getNonceSize() {
@@ -38,10 +42,6 @@ public class PowWorker extends Thread {
 
 	private int getDifficulty() {
 		return this.difficulty;
-	}
-
-	private ThreadPool getThreadPool() {
-		return this.threadPool;
 	}
 
 	private boolean getHasToWork() {
@@ -78,8 +78,8 @@ public class PowWorker extends Thread {
 		}
 
 		if (ByteArrayUtil.compliesDifficulty(currentHash, this.getDifficulty()))
-			this.getThreadPool().write(new FoundNonce(currentNonce));
+			this.getResultBuffer().write(new FoundNonce(currentNonce));
 		else if (currentNum == workUnit.maxRange())
-			this.getThreadPool().incFailedThreads();
+			this.getResultBuffer().incFailures();
 	}
 }
