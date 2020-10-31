@@ -42,7 +42,7 @@ Si, en cambio, todos los `PowWorker` terminaran sin resultado (habiendo cada uno
 
 #### 3.2. Datos
 
-Los datos presentados muestran el tiempo de ejecución tanscurrido para hallar un nonce con la dificultades 2 y 3, usando 1, 2, 4, 6, 8 y 10 threads. 
+Los datos presentados muestran el tiempo de ejecución tanscurrido para hallar un nonce con la dificultades 2 y 3, usando 1, 2, 4, 6, 8 y 10 threads. El prefijo siempre se deja vacío.
 
 Las pruebas fueron corridas en el equipo especificado en el punto anterior. Cada combinación de dificultad/cantidad de threads fue corrida cinco veces, y se presenta el promedio de tiempo en todos los casos.
 
@@ -67,6 +67,10 @@ Las pruebas fueron corridas en el equipo especificado en el punto anterior. Cada
 | 6 | 8181 ms |
 | 8 | 2464 ms |
 | 10 | 15963 ms |
+
+##### 3.2.c. Gráfico
+
+![](https://i.imgur.com/Pw0oq4n.png)
 
 ### Análisis
 
