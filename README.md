@@ -22,13 +22,15 @@ En caso de que terminaran todos los thread de barrer su rango de combinaciones p
 
 #### 2.2. Diseño
 
-El programa consta de un monitor `ThreadPool` al cual se le pide comenzar la búsqueda, e inmediatamente después se trata de leer de él el resultado obtenido. Esto bloqueará al thread principal del programa hasta que en `ThreadPool` haya sido escrita una respuesta.
+El programa consta de un `ThreadPool`, que se encarga de instanciar los thread (`PowWorker`) que llevan a cabo la búsqueda. Para esto, se pasan como parámetros la configuración pasada por el usuario, un buffer del cual cada worker tomará su unidad de trabajo, y otro buffer al cual los worker le comunicarán su resultado.
 
-Los thread `PowWorker` concen el rango de valores que deben chequear a través de un objeto `WorkUnit`, el cuál consumen de un monitor `Buffer`. El thread productor `WorkUnitProducer` se encarga de suplir al buffer de unidades de trabajo a medida que éstas son consumidas.
+Inmediatamente luego de indicar al `ThreadPool` que inicie la búsqueda, se trata de leer del `ResultBuffer` la respuesta obtenida. Esto bloqueará al thread principal del programa hasta que en `ResultBuffer` haya sido escrita una respuesta.
 
-Un `PowWorker` trabajará bien hasta encontrar un nonce que satisfaga lo requerido, termine de barrer su rango de valores, o se le notifique que debe parar. Esto último ocurrirá cuando el `ThreadPool` reciba un nonce de algún `PowWorker` que lo haya encontrado.
+Los thread `PowWorker` conocen el rango de combinaciones que deben chequear a través de un objeto `WorkUnit`, el cuál consumen del monitor `Buffer`. El thread productor `WorkUnitProducer` se encarga de suplir al buffer de unidades de trabajo a medida que éstas son consumidas, y es lanzado antes de comenzar la búsqueda a través del `ThreadPool`.
 
-Si, en cambio, todos los `PowWorker` terminaran sin resultado (habiendo cada uno notificado al `ThreadPool` de esto), el `ThreadPool` dará como respuesta que el nonce pedido no existe.
+Un `PowWorker` trabajará bien hasta encontrar un nonce que satisfaga lo requerido, termine de barrer su rango de valores, o se le notifique que debe parar. Esto último ocurrirá cuando el `ThreadPool` reciba un mensaje indicando que debe detener la búsqueda, el cuál es enviado luego de ser leído el resultado de la búsqueda.
+
+Si, en cambio, todos los `PowWorker` terminaran sin resultado (habiendo cada uno notificado al `ResultBuffer` de esto), el `ResultBuffer` dará como respuesta que el nonce pedido no existe.
 
 ### 3. Evaluación
 
