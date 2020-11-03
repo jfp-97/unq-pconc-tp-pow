@@ -74,6 +74,20 @@ Las pruebas fueron corridas en el equipo especificado en el punto anterior. Cada
 
 ![](https://i.imgur.com/Pw0oq4n.png)
 
-### Análisis
+### 4. Análisis
 
-Golden nonce (no existe) -> 1728705 ms = ~29 min
+#### 4.1. Dificultad < 4
+
+Dada la abundante cantidad de nonce para las dificultades 2 y 3, y la naturaleza determínistica de la posición de los mismos, es notable que la mejor performance se corresponde con una cantidad de threads en la cuál haya un nonce cerca de alguno de los puntos de entrada para la búsqueda.
+
+Por ejemplo, usando 4 threads en dificultad 3, el nonce encontrado es siempre el mismo: `{ 64, -124, -111, 9 }`. Si dividieramos las combinaciones en 4 sectores, se encuentra muy cerca del comienzo del cuarto sector.
+
+La ventaja de tener un nonce cerca de algún punto de entrada usando *n* threads es acarreada a los múltiplos de *n*: con 8 y 12 threads, el nonce hayado sigue siendo siempre el mismo que con 4, y el tiempo de búsqueda sigue siendo similar, si bien un poco mayor debido a la mayor cantidad de interleavings.
+
+#### 4.2. Golden nonce
+
+Intentando encontrar el *golden nonce* (dificultad 4, prefijo vacío), se realizaron dos pruebas: una con cuatro threads, y otra con uno solo. Ambas recorrieron todas las combinaciones y concluyeron que no existe tal nonce.
+
+Sin embargo, es de interés la diferencia de performance entre los escenarios: la búsqueda con cuatro threads finalizó luego de 1728705 ms (~29 min), mientras que con un solo thread, terminó recién luego de 2564721 ms (~43 min).
+
+Este diferencia considerable en el tiempo de búsqueda se debe a que la mayor cantidad de threads hace mejor uso del tiempo ocioso del procesador.
